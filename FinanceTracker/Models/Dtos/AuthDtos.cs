@@ -1,3 +1,5 @@
 ﻿namespace FinanceTracker.Models.Dtos;
 
-public record CreateRegisterDto(string email, string passworHash);
+public record RegisterDto(string Email, string Password);
+
+public record LoginDto(string Email, string Password);

@@ -4,5 +4,7 @@ namespace FinanceTracker.Services.Interfaces;
 
 public interface IAuthService
 {
-    public void Register(CreateRegisterDto registerDto);
+    public Task Register(RegisterDto registerDto);
+
+    public Task<string?> Login(LoginDto dto);
 }

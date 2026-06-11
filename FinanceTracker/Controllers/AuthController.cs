@@ -1,4 +1,5 @@
-﻿using FinanceTracker.Services.Interfaces;
+﻿using FinanceTracker.Models.Dtos;
+using FinanceTracker.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceTracker.Controllers;
@@ -10,10 +11,21 @@ public class AuthController : ControllerBase
     private readonly IAuthService _service;
     
     public AuthController(IAuthService service) => _service = service;
-    [HttpPost]
-    public IActionResult Register(string email, string password)
+    
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
-        string hash = BCrypt.Net.BCrypt.HashPassword(password);
-        
+        await _service.Register(dto);
+        return Ok();
+    }
+    
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto dto)
+    {
+        var token = await _service.Login(dto);
+        if (token is null)
+            return Unauthorized("Неверный email или пароль");
+
+        return Ok(new { token });
     }
 }

@@ -18,8 +18,8 @@ public class UserService : IUserService
     {
         var user = new User
         {
-            Email = userDto.email,
-            PasswordHash = userDto.passwordHash,
+            Email = userDto.Email,
+            PasswordHash = userDto.PasswordHash,
             CreatedAt = DateTime.UtcNow
         };
 
