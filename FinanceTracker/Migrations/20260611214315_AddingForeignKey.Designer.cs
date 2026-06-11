@@ -3,6 +3,7 @@ using System;
 using FinanceTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinanceTracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260611214315_AddingForeignKey")]
+    partial class AddingForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,8 +82,6 @@ namespace FinanceTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Budgets");
@@ -94,6 +95,9 @@ namespace FinanceTracker.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -105,6 +109,8 @@ namespace FinanceTracker.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
 
@@ -190,12 +196,6 @@ namespace FinanceTracker.Migrations
 
             modelBuilder.Entity("FinanceTracker.Models.Entities.Budget", b =>
                 {
-                    b.HasOne("FinanceTracker.Models.Entities.Category", null)
-                        .WithMany("Budgets")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("FinanceTracker.Models.Entities.User", null)
                         .WithMany("Budgets")
                         .HasForeignKey("UserId")
@@ -205,6 +205,10 @@ namespace FinanceTracker.Migrations
 
             modelBuilder.Entity("FinanceTracker.Models.Entities.Category", b =>
                 {
+                    b.HasOne("FinanceTracker.Models.Entities.Category", null)
+                        .WithMany("Categories")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("FinanceTracker.Models.Entities.User", null)
                         .WithMany("Categories")
                         .HasForeignKey("UserId")
@@ -240,7 +244,7 @@ namespace FinanceTracker.Migrations
 
             modelBuilder.Entity("FinanceTracker.Models.Entities.Category", b =>
                 {
-                    b.Navigation("Budgets");
+                    b.Navigation("Categories");
 
                     b.Navigation("Transactions");
                 });

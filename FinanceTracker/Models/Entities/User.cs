@@ -8,4 +8,7 @@ public class User
     public DateTime CreatedAt { get; set; }
 
     public List<Account> Accounts { get; set; } = new();
+    public List<Budget> Budgets { get; set; } = new();
+    public List<Category> Categories { get; set; } = new();
+    public List<Transaction> Transactions { get; set; } = new();
 }

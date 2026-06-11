@@ -17,10 +17,8 @@ public class AccountService : IAccountService
     
     public async Task<List<AccountDto>> GetAccounts(int userId)
     {
-        var accounts = await _db.Accounts
+        var accountDtos = await _db.Accounts
             .Where(a => a.UserId == userId)
-            .ToListAsync();
-        var accountDtos = accounts
             .Select(a => new AccountDto(
                 a.Id,
                 a.UserId,
@@ -29,7 +27,8 @@ public class AccountService : IAccountService
                 a.InitialBalance,
                 a.Currency,
                 a.CreatedAt))
-            .ToList();
+            .ToListAsync();
+        
         return accountDtos;
     }
 
