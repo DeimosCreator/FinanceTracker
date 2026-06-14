@@ -26,6 +26,7 @@ public class TransactionService : ITransactionService
         }
 
         var transactionsDto = await _db.Transactions
+            .AsNoTracking()
             .Where(tr => tr.UserId == userId &&
                          (accountId == null || tr.AccountId == accountId) &&
                          (categoryId == null || tr.CategoryId == categoryId) &&
@@ -43,6 +44,7 @@ public class TransactionService : ITransactionService
     public async Task<TransactionDto?> GetTransaction(int userId, int id)
     {
         var transaction = await _db.Transactions
+            .AsNoTracking()
             .Where(tr => tr.UserId == userId && tr.Id == id)
             .FirstOrDefaultAsync();
 

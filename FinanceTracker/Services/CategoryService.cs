@@ -18,11 +18,10 @@ public class CategoryService : ICategoryService
     public async Task<List<CategoryDto>?> GetCategories(int userId, string? filter)
     {
         if (!Enum.TryParse<CategoryType>(filter, out var categoryType) && !string.IsNullOrEmpty(filter))
-        {
             return null;
-        }
         
         var categoriesDto = await _db.Categories
+            .AsNoTracking()
             .Where(c => c.UserId == userId && (c.Type == categoryType || string.IsNullOrEmpty(filter)))
             .Select(c => new CategoryDto(c.Id, c.UserId, c.Name, c.Type))
             .ToListAsync();

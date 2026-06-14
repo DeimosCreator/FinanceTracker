@@ -32,7 +32,9 @@ public class AuthService : IAuthService
     
     public async Task<string?> Login(LoginDto dto)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+        var user = await _db.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Email == dto.Email);
         if (user is null) return null;
 
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))

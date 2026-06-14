@@ -18,6 +18,7 @@ public class AccountService : IAccountService
     public async Task<List<AccountDto>> GetAccounts(int userId)
     {
         var accountDtos = await _db.Accounts
+            .AsNoTracking()
             .Where(a => a.UserId == userId)
             .Select(a => new AccountDto(
                 a.Id,
@@ -34,12 +35,13 @@ public class AccountService : IAccountService
 
     public async Task<AccountDto?> GetAccount(int userId, int id)
     {
-        var account = await _db.Accounts.Where(a => a.UserId == userId && a.Id == id).FirstOrDefaultAsync();
+        var account = await _db.Accounts
+            .AsNoTracking()
+            .Where(a => a.UserId == userId && a.Id == id)
+            .FirstOrDefaultAsync();
         
         if (account == null)
-        {
             return null;
-        }
         
         var accountDto = new AccountDto(
             account.Id,

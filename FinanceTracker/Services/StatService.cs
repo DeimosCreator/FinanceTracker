@@ -18,14 +18,17 @@ public class StatService : IStatService
     public async Task<SummaryDto> GetSummary(int userId, DateOnly month)
     {
         var totalIncome = await _db.Transactions
+            .AsNoTracking()
             .Where(tr => tr.UserId == userId && tr.Date.Month == month.Month && tr.Type == TransactionType.Income)
             .SumAsync(tr => tr.Amount);
         
         var totalExpense = await _db.Transactions
+            .AsNoTracking()
             .Where(tr => tr.UserId == userId && tr.Date.Month == month.Month && tr.Type == TransactionType.Expense)
             .SumAsync(tr => tr.Amount);
 
         var initialBalance = await _db.Accounts
+            .AsNoTracking()
             .Where(a => a.UserId == userId &&
                         _db.Transactions
                             .Any(tr => tr.UserId == userId &&
@@ -45,6 +48,7 @@ public class StatService : IStatService
             return null;
         
         var categoryStatDtos = await _db.Categories
+            .AsNoTracking()
             .Where(cat => cat.UserId == userId && cat.Type == categoryType)
             .Include(cat => cat.Transactions)
             .Select(cat => new CategoryStatDto(
