@@ -11,4 +11,7 @@ public class Transaction
     public DateTime Date { get; set; }
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
+    
+    public Account Account { get; set; } = null!;
+    public Category Category { get; set; } = null!;
 }

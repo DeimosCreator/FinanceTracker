@@ -12,5 +12,5 @@ public interface IAccountService
 
     public Task<AccountDto?> UpdateAccount(int userId, int id, UpdateAccountDto accountDto);
 
-    public Task<bool> RemoveAccount(int userId, int id);
+    public Task<bool> DeleteAccount(int userId, int id);
 }

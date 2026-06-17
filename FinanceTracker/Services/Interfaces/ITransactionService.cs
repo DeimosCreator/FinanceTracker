@@ -9,7 +9,7 @@ public interface ITransactionService
 
     public Task<TransactionDto?> GetTransaction(int userId, int id);
 
-    public Task<TransactionDto> CreateTransaction(int userId, CreateTransactionDto createTransactionDto);
+    public Task<TransactionDto?> CreateTransaction(int userId, CreateTransactionDto createTransactionDto);
 
     public Task<TransactionDto?> UpdateTransaction(int userId, int id, UpdateTransactionDto updateTransactionDto);
 

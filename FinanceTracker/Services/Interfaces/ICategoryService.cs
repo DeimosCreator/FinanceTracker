@@ -10,5 +10,5 @@ public interface ICategoryService
 
     public Task<CategoryDto?> UpdateCategory(int userId, int id, UpdateCategoryDto updateCategoryDto);
 
-    public Task<bool> RemoveCategory(int userId, int id);
+    public Task<bool> DeleteCategory(int userId, int id);
 }

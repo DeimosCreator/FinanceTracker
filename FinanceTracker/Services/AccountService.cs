@@ -94,7 +94,7 @@ public class AccountService : IAccountService
             account.InitialBalance, account.Currency, account.CreatedAt);
     }
 
-    public async Task<bool> RemoveAccount(int userId, int id)
+    public async Task<bool> DeleteAccount(int userId, int id)
     {
         var account = await _db.Accounts.Where(a => a.UserId == userId && a.Id == id).FirstOrDefaultAsync();
         if (account == null) return false;

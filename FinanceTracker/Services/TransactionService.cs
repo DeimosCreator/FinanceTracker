@@ -21,7 +21,7 @@ public class TransactionService : ITransactionService
             return null;
         if (page == null || pageSize == null)
         {
-            page = 0;
+            page = 1;
             pageSize = int.MaxValue;
         }
 
@@ -32,7 +32,7 @@ public class TransactionService : ITransactionService
                          (categoryId == null || tr.CategoryId == categoryId) &&
                          (from == null || tr.CreatedAt >= from) &&
                          (to == null || tr.CreatedAt <= to))
-            .Skip((int)(page - 1))
+            .Skip((int)((page - 1) * pageSize)!)
             .Take((int)pageSize)
             .Select(tr => new TransactionDto(tr.Id, tr.UserId, tr.AccountId,
                 tr.CategoryId, tr.Amount, tr.Type, tr.Date, tr.Description, tr.CreatedAt))
@@ -58,8 +58,12 @@ public class TransactionService : ITransactionService
         return transactionDto;
     }
 
-    public async Task<TransactionDto> CreateTransaction(int userId, CreateTransactionDto createTransactionDto)
+    public async Task<TransactionDto?> CreateTransaction(int userId, CreateTransactionDto createTransactionDto)
     {
+        if (!await _db.Accounts.AnyAsync(a => a.Id == createTransactionDto.AccountId && a.UserId == userId) || 
+            !await _db.Categories.AnyAsync(c => c.Id == createTransactionDto.CategoryId && c.UserId == userId))
+            return null;
+        
         var transaction = new Transaction
         {
             UserId = userId,
@@ -84,6 +88,10 @@ public class TransactionService : ITransactionService
 
     public async Task<TransactionDto?> UpdateTransaction(int userId, int id, UpdateTransactionDto updateTransactionDto)
     {
+        if (!await _db.Accounts.AnyAsync(a => a.Id == updateTransactionDto.AccountId && a.UserId == userId) ||
+            !await _db.Categories.AnyAsync(c => c.Id == updateTransactionDto.CategoryId && c.UserId == userId))
+            return null;
+        
         var transaction = await _db.Transactions
             .Where(tr => tr.UserId == userId && tr.Id == id)
             .FirstOrDefaultAsync();

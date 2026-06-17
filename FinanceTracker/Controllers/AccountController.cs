@@ -72,10 +72,10 @@ public class AccountController : BaseController
     }
     
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> RemoveAccount(int id)
+    public async Task<IActionResult> DeleteAccount(int id)
     {
         var userId = GetUserId();
-        var status = await _service.RemoveAccount(userId, id);
+        var status = await _service.DeleteAccount(userId, id);
 
         return status ? Ok() : BadRequest("Не удалось удалить счёт");
     }

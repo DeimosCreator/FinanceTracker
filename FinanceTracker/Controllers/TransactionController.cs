@@ -37,7 +37,7 @@ public class TransactionController : BaseController
         var transaction = await _service.GetTransaction(userId, id);
 
         if (transaction == null)
-            return BadRequest();
+            return NotFound();
 
         return Ok(transaction);
     }
@@ -47,6 +47,9 @@ public class TransactionController : BaseController
     {
         var userId = GetUserId();
         var transaction = await _service.CreateTransaction(userId, createTransactionDto);
+        
+        if (transaction == null)
+            return BadRequest();
 
         return Ok(transaction);
     }

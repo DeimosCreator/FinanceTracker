@@ -19,24 +19,21 @@ public class StatService : IStatService
     {
         var totalIncome = await _db.Transactions
             .AsNoTracking()
-            .Where(tr => tr.UserId == userId && tr.Date.Month == month.Month && tr.Type == TransactionType.Income)
+            .Where(tr => tr.UserId == userId && 
+                         tr.Date.Year == month.Year &&
+                         tr.Date.Month == month.Month && 
+                         tr.Type == TransactionType.Income)
             .SumAsync(tr => tr.Amount);
         
         var totalExpense = await _db.Transactions
             .AsNoTracking()
-            .Where(tr => tr.UserId == userId && tr.Date.Month == month.Month && tr.Type == TransactionType.Expense)
+            .Where(tr => tr.UserId == userId && 
+                         tr.Date.Year == month.Year &&
+                         tr.Date.Month == month.Month && 
+                         tr.Type == TransactionType.Expense)
             .SumAsync(tr => tr.Amount);
 
-        var initialBalance = await _db.Accounts
-            .AsNoTracking()
-            .Where(a => a.UserId == userId &&
-                        _db.Transactions
-                            .Any(tr => tr.UserId == userId &&
-                                       tr.Date.Month == month.Month &&
-                                       tr.AccountId == a.Id))
-            .SumAsync(a => a.InitialBalance);
-        
-        var balance =  totalIncome - totalExpense + initialBalance;
+        var balance = totalIncome - totalExpense;
 
         var summaryDto = new SummaryDto(totalIncome, totalExpense, balance);
         return summaryDto;
@@ -46,26 +43,26 @@ public class StatService : IStatService
     {
         if (!Enum.TryParse<CategoryType>(type, out var categoryType))
             return null;
-        
-        var categoryStatDtos = await _db.Categories
+
+        var sums = await _db.Transactions
             .AsNoTracking()
-            .Where(cat => cat.UserId == userId && cat.Type == categoryType)
-            .Include(cat => cat.Transactions)
-            .Select(cat => new CategoryStatDto(
-                cat.Name, 
-                cat.Transactions
-                    .Where(tr => (from == null || tr.Date > from) &&
-                                 (to == null || tr.Date <= to))
-                    .Sum(tr => tr.Amount),
-                cat.Transactions
-                    .Where(tr => (from == null || tr.Date > from) &&
-                                 (to == null || tr.Date <= to))
-                    .Sum(tr => tr.Amount) / _db.Transactions
-                    .Where(tr => (from == null || tr.Date > from) &&
-                                 (to == null || tr.Date <= to))
-                    .Sum(tr => tr.Amount) * 100))
+            .Where(tr => tr.UserId == userId
+                         && tr.Category.Type == categoryType
+                         && (from == null || tr.Date >= from)
+                         && (to == null || tr.Date <= to))
+            .GroupBy(tr => tr.Category.Name)
+            .Select(g => new { Category = g.Key, Total = g.Sum(t => t.Amount) })
             .ToListAsync();
 
-        return categoryStatDtos;
+        var grandTotal = sums.Sum(s => s.Total);
+
+        var result = sums
+            .Select(s => new CategoryStatDto(
+                s.Category,
+                s.Total,
+                grandTotal == 0 ? 0 : s.Total / grandTotal * 100))
+            .ToList();
+
+        return result;
     }
 }

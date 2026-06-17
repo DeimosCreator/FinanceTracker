@@ -68,7 +68,7 @@ public class CategoryService : ICategoryService
         return categoryDto;
     }
 
-    public async Task<bool> RemoveCategory(int userId, int id)
+    public async Task<bool> DeleteCategory(int userId, int id)
     {
         var category = await _db.Categories.Where(c => c.UserId == userId && c.Id == id).FirstOrDefaultAsync();
         if (category == null) return false;

@@ -50,10 +50,10 @@ public class CategoryController : BaseController
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> RemoveCategory(int id)
+    public async Task<IActionResult> DeleteCategory(int id)
     {
         var userId = GetUserId();
-        var status = await _service.RemoveCategory(userId, id);
+        var status = await _service.DeleteCategory(userId, id);
         if (!status)
             return BadRequest("Категория не найдена");
 
