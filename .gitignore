@@ -136,3 +136,5 @@ _NCrunch*
 .git
 .idea
 *.bin
+
+appsettings.Development.json
