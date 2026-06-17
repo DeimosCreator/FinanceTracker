@@ -138,3 +138,4 @@ _NCrunch*
 *.bin
 
 appsettings.Development.json
+.env
