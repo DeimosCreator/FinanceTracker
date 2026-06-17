@@ -16,13 +16,7 @@ REST API для учёта личных финансов: пользовател
 
 ## Архитектура
 
-```mermaid
-flowchart LR
-    Client["Клиент"] -->|"HTTP + JWT"| C["Controllers"]
-    C --> S["Services (бизнес-логика)"]
-    S --> DB["AppDbContext (EF Core)"]
-    DB --> PG[("PostgreSQL")]
-```
+![Архитектура проекта](architecture.png)
 
 Зависимости идут в одну сторону: `Controllers → Services → AppDbContext`. Наружу отдаются только DTO, сущности EF за пределы сервисов не выходят. `UserId` берётся из проверенного JWT-токена, поэтому пользователь работает только со своими данными.
 
