@@ -12,6 +12,8 @@ DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 // сервисы
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
