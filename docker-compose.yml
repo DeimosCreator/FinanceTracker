@@ -7,17 +7,23 @@
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - finance-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
-  app:
-    build:
-      context: .
-      dockerfile: FinanceTracker/Dockerfile
-    depends_on:
-      - db
-    environment:
-      ConnectionStrings__Default: "Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
-      Jwt__Key: ${JWT_KEY}
-      ASPNETCORE_ENVIRONMENT: "Development"
+    app:
+      build:
+        context: .
+        dockerfile: FinanceTracker/Dockerfile
+      depends_on:
+        db:
+          condition: service_healthy
+      environment:
+        ConnectionStrings__Default: "Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+        Jwt__Key: ${JWT_KEY}
+        ASPNETCORE_ENVIRONMENT: "Development"
 
   caddy:
     image: caddy:2
