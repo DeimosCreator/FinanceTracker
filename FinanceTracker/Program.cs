@@ -88,8 +88,6 @@ using (var scope = app.Services.CreateScope())
 
 app.UseExceptionHandler();
 
-app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
