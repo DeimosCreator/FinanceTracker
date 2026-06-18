@@ -30,8 +30,9 @@ public class TransactionService : ITransactionService
             .Where(tr => tr.UserId == userId &&
                          (accountId == null || tr.AccountId == accountId) &&
                          (categoryId == null || tr.CategoryId == categoryId) &&
-                         (from == null || tr.CreatedAt >= from) &&
-                         (to == null || tr.CreatedAt <= to))
+                         (from == null || tr.Date >= from) &&
+                         (to == null || tr.Date <= to))
+            .OrderBy(tr => tr.Id)
             .Skip((int)((page - 1) * pageSize)!)
             .Take((int)pageSize)
             .Select(tr => new TransactionDto(tr.Id, tr.UserId, tr.AccountId,
