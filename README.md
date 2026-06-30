@@ -1,8 +1,19 @@
 ﻿# FinanceTracker
 
+![.NET](https://img.shields.io/badge/.NET-10-512BD4)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 REST API для учёта личных финансов: пользователь регистрируется, заводит счета и категории, записывает доходы и расходы и смотрит статистику за период. Каждый пользователь видит и изменяет только свои данные.
 
 Учебный pet-проект для отработки backend-разработки на .NET: REST API, аутентификация по JWT, работа с БД через EF Core, агрегации и расчёты на стороне базы.
+
+## Live Demo
+
+Проект развёрнут и доступен онлайн: **https://financetracker-andrey.ru/swagger**
+
+Можно протестировать API прямо в браузере: зарегистрироваться, получить JWT и попробовать эндпоинты.
 
 ## Стек
 
